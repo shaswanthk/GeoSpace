@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2563eb">
+<title>GeoSpace — Interactive Geometry Studio</title>
+<style>
+:root{color-scheme:light;--bg:#f3f6fb;--panel:#fff;--panel2:#f8fafc;--text:#172033;--muted:#64748b;--line:#dbe3ef;--accent:#2563eb;--accent2:#dbeafe;--danger:#dc2626;--good:#15803d;--shadow:0 8px 30px rgba(15,23,42,.07)}
+[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--panel:#111c2e;--panel2:#162338;--text:#e5edf8;--muted:#9aabc2;--line:#293951;--accent:#60a5fa;--accent2:#1e3a5f;--danger:#f87171;--good:#4ade80;--shadow:0 8px 30px rgba(0,0,0,.2)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;height:100vh;overflow:hidden}
+button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:9px;padding:8px 11px;transition:.15s}button:hover{border-color:var(--accent);background:var(--panel2)}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button.active{background:var(--accent2);border-color:var(--accent);color:var(--accent)}button.danger{color:var(--danger)}button:disabled{opacity:.45;cursor:not-allowed}
+input,select{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px;min-width:0}input:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+body,.topbar,.nav,.side,.toolbar,.canvas-wrap,.panel-card,.about-card,button,input,select{transition:background-color .18s ease,color .18s ease,border-color .18s ease} .app{height:100vh;display:grid;grid-template-rows:62px 1fr}.topbar{display:flex;align-items:center;gap:16px;padding:0 18px;background:var(--panel);border-bottom:1px solid var(--line);z-index:3}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;white-space:nowrap}.brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;color:white;font-size:18px}.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}.status{font-size:12px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:220px minmax(300px,1fr) 290px;min-height:0}.nav{background:var(--panel);border-right:1px solid var(--line);padding:16px 12px;overflow:auto}.nav-label{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--muted);padding:12px 10px 7px}.nav button{width:100%;text-align:left;border:0;background:transparent;margin:2px 0;padding:10px;display:flex;gap:10px;align-items:center}.nav button.active{background:var(--accent2);color:var(--accent);font-weight:700}.nav .ico{width:20px;text-align:center}
+.main{min-width:0;min-height:0;display:flex;flex-direction:column}.pagehead{padding:16px 20px 10px;display:flex;align-items:center;gap:12px}.pagehead h1{font-size:20px;margin:0}.pagehead p{margin:3px 0 0;color:var(--muted);font-size:12px}.workspace{flex:1;min-height:0;padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}.toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);padding:8px;border-radius:12px}.tool-group{display:flex;gap:5px;align-items:center;padding-right:8px;margin-right:3px;border-right:1px solid var(--line)}.tool{padding:7px 9px;font-size:12px}.tool small{opacity:.7}.canvas-wrap{flex:1;min-height:220px;position:relative;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}canvas{width:100%;height:100%;display:block;touch-action:none}.canvas-hud{position:absolute;left:12px;top:12px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 10px;color:var(--muted);font-size:11px;pointer-events:none}.canvas-bottom{position:absolute;bottom:10px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;color:var(--muted);font-size:11px}
+.side{background:var(--panel);border-left:1px solid var(--line);min-height:0;overflow:auto;padding:16px}.side h3{font-size:13px;margin:0 0 12px}.section{padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--line)}.muted{color:var(--muted)}.small{font-size:12px}.object{padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);margin:6px 0;display:flex;justify-content:space-between;gap:8px;font-size:12px}.object strong{color:var(--accent)}.empty{color:var(--muted);text-align:center;padding:24px 8px;font-size:12px}.field{display:grid;gap:5px;margin:9px 0}.field label{font-size:11px;color:var(--muted);font-weight:700}.row{display:flex;gap:7px;align-items:center}.row>*{flex:1}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.panel-card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px;box-shadow:var(--shadow)}.dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 20px 20px}.stat{font-size:25px;font-weight:800;margin-top:5px}.card-title{font-weight:700}.page-content{padding:0 20px 20px;overflow:auto}.page-content h2{font-size:16px}.formula{font-family:ui-monospace,monospace;background:var(--panel2);padding:10px;border-radius:8px;margin:6px 0;overflow:auto}.calc-display{font-size:26px;text-align:right;padding:18px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;min-height:68px;overflow:auto}.keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.keypad button{padding:13px}.graph-input{width:100%;margin:4px 0}.project-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:10px;margin:7px 0}.icon{width:17px;height:17px;display:inline-block;vertical-align:-3px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.icon-lg{width:21px;height:21px}.nav .icon{width:18px;height:18px}.brand-mark{font-family:Georgia,serif;font-size:23px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#172033;color:white;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow);z-index:10;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}.mobile-menu{display:none}
+@media(max-width:1050px){.layout{grid-template-columns:190px minmax(280px,1fr)}.side{display:none}.dashboard-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){body{overflow:auto;height:auto;min-height:100vh}.app{height:auto;min-height:100vh;grid-template-rows:58px 1fr}.topbar{padding:0 10px}.brand{font-size:13px}.top-actions button{padding:7px}.status{display:none}.layout{display:block}.nav{display:flex;overflow:auto;padding:6px;border-right:0;border-bottom:1px solid var(--line);gap:4px}.nav-label{display:none}.nav button{width:auto;white-space:nowrap;margin:0;padding:8px}.nav button span:last-child{display:none}.main{min-height:calc(100vh - 110px)}.pagehead{padding:13px 12px 8px}.workspace{padding:0 9px 10px}.toolbar{gap:4px;padding:6px}.tool{padding:7px;font-size:11px}.tool-group{padding-right:4px}.canvas-wrap{min-height:55vh}.dashboard-grid{padding:0 12px 16px;grid-template-columns:1fr 1fr}.page-content{padding:0 12px 18px}.pagehead h1{font-size:18px}}
+
+/* GeoSpace identity */
+.geospace-logo{width:38px;height:38px;flex:0 0 38px;color:#2563eb;display:block}
+.brand{gap:11px}
+.brand>span{font-weight:750;letter-spacing:-.035em}
+
+
+.about-card{max-width:760px;margin:24px auto;padding:clamp(28px,5vw,56px);border:1px solid var(--border,#dbeafe);border-radius:24px;background:linear-gradient(145deg,rgba(37,99,235,.07),rgba(59,130,246,.015));text-align:center}
+.about-logo-wrap{display:flex;justify-content:center;margin-bottom:24px;color:#2563eb}
+.about-logo-wrap .geospace-logo{width:64px;height:64px;flex-basis:64px}
+.about-kicker{font-size:11px;font-weight:800;letter-spacing:.16em;color:#2563eb;margin-bottom:12px}
+.about-card h2{font-size:clamp(25px,4vw,38px);letter-spacing:-.04em;margin:0 auto 14px;max-width:540px}
+.about-card p{max-width:560px;margin:0 auto;color:var(--muted,#64748b);line-height:1.75}
+.about-credit{display:flex;justify-content:center;gap:54px;flex-wrap:wrap;margin:34px 0 26px}
+.about-credit>div{display:grid;gap:7px}
+.credit-label{font-size:10px;letter-spacing:.15em;font-weight:800;color:#64748b}
+.about-credit strong{font-size:17px}
+.about-footer{padding-top:20px;border-top:1px solid var(--border,#dbeafe);font-size:13px;color:var(--muted,#64748b)}
+
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header class="topbar">
+  <div class="brand">
+<svg class="geospace-logo" viewBox="0 0 40 40" role="img" aria-label="GeoSpace logo">
+  <rect x="1" y="1" width="38" height="38" rx="11" fill="currentColor"/>
+  <path d="M9 30V10M9 30H31" fill="none" stroke="#BFDBFE" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M9 30 27.5 11.5 31 30Z" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="9" cy="30" r="2.2" fill="#FFFFFF"/>
+  <circle cx="27.5" cy="11.5" r="2.2" fill="#BFDBFE"/>
+  <circle cx="31" cy="30" r="2.2" fill="#FFFFFF"/>
+</svg>
+<span>GeoSpace</span></div>
+  <div class="status" id="saveStatus">Ready · Saved locally in this browser</div>
+  <div class="top-actions">
+    <button id="undoBtn" title="Undo (Ctrl+Z)"><svg class="icon" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-2"/></svg></button><button id="redoBtn" title="Redo (Ctrl+Y)"><svg class="icon" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h2"/></svg></button>
+    <button id="themeBtn" title="Toggle theme"><svg class="icon" viewBox="0 0 24 24"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5a8.5 8.5 0 1 0 12 12Z"/></svg></button>
+    <button id="fullscreenBtn" title="Fullscreen"><svg class="icon" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+  </div>
+</header>
+<div class="layout">
+<nav class="nav">
+  <div class="nav-label">WORKSPACE</div>
+  <button class="active" data-page="geometry"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20 20 3l1 18H3Z"/><path d="m8 15 2 2m2-6 2 2m2-6 2 2"/></svg></span><span>Geometry Studio</span></button>
+  <button data-page="graph"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 6-7"/></svg></span><span>Graphing Calculator</span></button>
+  <div class="nav-label">MATH TOOLS</div>
+  <button data-page="calculator"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2"/><path d="M8 6h8M8 11h2m4 0h2M8 15h2m4 0h2M8 19h2m4 0h2"/></svg></span><span>Scientific Calculator</span></button>
+  <button data-page="shapes"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 3v18"/></svg></span><span>Shape Calculator</span></button>
+  <button data-page="formulas"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><path d="M18 4H6l8 8-8 8h12"/></svg></span><span>Formula Library</span></button>
+  <div class="nav-label">YOUR WORK</div>
+  <button data-page="projects"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z"/></svg></span><span>My Projects</span></button>
+  <button data-page="help"><span class="ico"><svg class="icon" viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Z"/><path d="M6 11v5c3 3 9 3 12 0v-5m4-2v7"/></svg></span><span>Guide & Shortcuts</span></button>
+
+<button class="nav-item" data-page="about" type="button">
+  <span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></span>
+  <span>About GeoSpace</span>
+</button>
+</nav>
+<main class="main" id="main">
+</main>
+<aside class="side" id="side"></aside>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const main=$('#main'),side=$('#side'),toastEl=$('#toast');
+let page='geometry',theme=(localStorage.getItem('mgg-theme')==='dark'?'dark':'light');
+let mode='point',points=[],lines=[],circles=[],polygons=[],selected=null,dragging=null,labelCounter=0;
+let history=[],future=[],grid=true,axes=false,snap=false,showLabels=true,zoom=1,pan={x:0,y:0},lastPointer=null;
+let graphFns=['y=2*x+1','y=x^2'];
+let calcExpr='0',calcAns='0';
+let projectName='Untitled construction';
+const colors=['#2563eb','#16a34a','#ea580c','#9333ea','#db2777'];
+function notify(msg){toastEl.textContent=msg;toastEl.classList.add('show');setTimeout(()=>toastEl.classList.remove('show'),1800)}
+function setTheme(t){
+  theme = t === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem('mgg-theme', theme); } catch (err) {}
+  const btn = $('#themeBtn');
+  if (btn) {
+    btn.innerHTML = theme === 'dark'
+      ? '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>'
+      : '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5a8.5 8.5 0 1 0 12 12Z"/></svg>';
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  }
+}
+setTheme(theme);
+function snapshot(){return JSON.stringify({points,lines:lines.map(l=>[points.indexOf(l.a),points.indexOf(l.b)]),circles:circles.map(c=>[points.indexOf(c.c),points.indexOf(c.edge)]),polygons:polygons.map(p=>p.map(x=>points.indexOf(x))),labelCounter})}
+function saveHistory(){history.push(snapshot());if(history.length>60)history.shift();future=[];updateUndo()}
+function restore(s){let d=JSON.parse(s);points=d.points;lines=d.lines.map(([a,b])=>({a:points[a],b:points[b]}));circles=d.circles.map(([a,b])=>({c:points[a],edge:points[b]}));polygons=d.polygons.map(a=>a.map(i=>points[i]));labelCounter=d.labelCounter;draw();renderObjects()}
+function undo(){if(!history.length)return;future.push(snapshot());restore(history.pop());updateUndo()}
+function redo(){if(!future.length)return;history.push(snapshot());restore(future.pop());updateUndo()}
+function updateUndo(){$('#undoBtn').disabled=!history.length;$('#redoBtn').disabled=!future.length}
+function label(){let n=labelCounter++,s='';do{s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26)-1}while(n>=0);return s}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)/40}
+function coords(p){return `(${((p.x-pan.x)/(40*zoom)).toFixed(2)}, ${((p.y-pan.y)/(40*zoom)).toFixed(2)})`}
+function setPage(p){page=p;$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));renderPage()}
+$$('.nav button').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
+function renderPage(){
+  if(page==='geometry'){renderGeometry();return}
+  side.innerHTML='';
+  const titles={graph:['Graphing Calculator','Plot and explore mathematical functions.'],calculator:['Scientific Calculator','Evaluate expressions and common mathematical functions.'],shapes:['Shape Calculator','Calculate areas, perimeters and triangle measurements.'],formulas:['Formula Library','A quick reference for essential mathematics.'],projects:['My Projects','Save, reopen, import and export your constructions.'],help:['Guide & Shortcuts','Learn the tools and keyboard shortcuts.'],about:['About GeoSpace','A learning space built around curiosity, creativity and mathematics.']};
+  let [title,sub]=titles[page];main.innerHTML=`<div class="pagehead"><div><h1>${title}</h1><p>${sub}</p></div></div><div class="page-content" id="pageContent"></div>`;
+  if(page==='graph')renderGraph();if(page==='calculator')renderCalculator();if(page==='shapes')renderShapes();if(page==='formulas')renderFormulas();if(page==='projects')renderProjects();if(page==='help')renderHelp();if(page==='about')renderAbout();
+}
+function renderGeometry(){
+main.innerHTML=`<div class="pagehead"><div><h1>Geometry Studio</h1><p>Construct, measure and explore dynamic geometry.</p></div><div style="margin-left:auto"><button id="newBtn">＋ New</button></div></div>
+<div class="workspace">
+<div class="toolbar">
+ <div class="tool-group"><button class="tool active" data-mode="point"><svg class="icon" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg> Point</button><button class="tool" data-mode="move"><svg class="icon" viewBox="0 0 24 24"><path d="M8 12V5a1.7 1.7 0 0 1 3.4 0v6-8a1.7 1.7 0 0 1 3.4 0v8-6a1.7 1.7 0 0 1 3.4 0v8-4a1.7 1.7 0 0 1 3.4 0v7c0 4-2.5 6-6 6h-3c-2 0-3.2-1-4.4-2.5L4 15a1.8 1.8 0 0 1 2.6-2.4L8 14"/></svg> Move</button></div>
+ <div class="tool-group"><button class="tool" data-mode="segment"><svg class="icon" viewBox="0 0 24 24"><path d="M5 19 19 5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg> Segment</button><button class="tool" data-mode="line"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18m-5-5 5 5-5 5M8 7l-5 5 5 5"/></svg> Line</button><button class="tool" data-mode="ray"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20 20 4m-7 0h7v7"/></svg> Ray</button></div>
+ <div class="tool-group"><button class="tool" data-mode="circle"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/></svg> Circle</button><button class="tool" data-mode="polygon"><svg class="icon" viewBox="0 0 24 24"><path d="m12 3 8 6-3 10H7L4 9l8-6Z"/></svg> Polygon</button></div>
+ <div class="tool-group"><button class="tool" data-mode="angle"><svg class="icon" viewBox="0 0 24 24"><path d="M5 19 5 5l14 14H5Z"/><path d="M9 15v-5h5"/></svg> Angle</button><button class="tool" data-mode="midpoint"><svg class="icon" viewBox="0 0 24 24"><path d="M4 12h16"/><circle cx="12" cy="12" r="7"/></svg> Midpoint</button></div>
+ <div class="tool-group"><button class="tool" data-mode="delete"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16l-1 14H5L4 7Z"/><path d="M9 7V4h6v3m-4 4v6m3-6v6"/></svg> Delete</button></div>
+ <button class="tool" id="gridBtn"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18m6-18v18M3 9h18M3 15h18"/></svg> Grid</button><button class="tool" id="axesBtn"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/><path d="m17 8 4 4-4 4M8 7l4-4 4 4"/></svg> Axes</button><button class="tool" id="snapBtn"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg> Snap</button>
+</div>
+<div class="canvas-wrap"><canvas id="geoCanvas"></canvas><div class="canvas-hud" id="modeHint">POINT · Click canvas to create a point</div><div class="canvas-bottom"><span id="coordsHud">x: 0 · y: 0</span><span>Scroll to zoom · Drag points in Move mode</span></div></div>
+</div>`;
+side.innerHTML=`<div class="section"><h3>Construction Objects</h3><div class="small muted" id="objectCount">0 objects</div><div id="objectList"></div></div>
+<div class="section"><h3>Selected object</h3><div id="selectedInfo" class="small muted">Select a point or construction to inspect it.</div></div>
+<div class="section"><h3>View settings</h3><div class="field"><label>Label visibility</label><button id="labelsBtn">${showLabels?'Labels visible':'Labels hidden'}</button></div><div class="field"><label>Zoom</label><input id="zoomRange" type="range" min=".5" max="2.5" step=".1" value="${zoom}"></div></div>
+<div><h3>Quick actions</h3><div class="grid2"><button id="undoSide">↶ Undo</button><button id="redoSide">↷ Redo</button><button id="exportPng">Export PNG</button><button id="clearBtn" class="danger">Clear all</button></div></div>`;
+$$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+$('#gridBtn').classList.toggle('active',grid);$('#axesBtn').classList.toggle('active',axes);$('#snapBtn').classList.toggle('active',snap);
+$('#gridBtn').onclick=()=>{grid=!grid;renderGeometry()};
+$('#axesBtn').onclick=()=>{axes=!axes;renderGeometry()};
+$('#snapBtn').onclick=()=>{snap=!snap;renderGeometry()};
+$('#labelsBtn').onclick=()=>{showLabels=!showLabels;renderGeometry();draw()};
+$('#zoomRange').oninput=e=>{zoom=+e.target.value;draw()};
+$('#undoSide').onclick=undo;$('#redoSide').onclick=redo;$('#clearBtn').onclick=clearAll;$('#newBtn').onclick=clearAll;$('#exportPng').onclick=exportPng;
+setupCanvas();renderObjects();setMode(mode);updateUndo();
+}
+function setMode(m){mode=m;selected=null;$$('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));let hints={point:'POINT · Click canvas to create a point',move:'MOVE · Drag a point to reposition it',segment:'SEGMENT · Select two points',line:'LINE · Select two points',ray:'RAY · Select two points',circle:'CIRCLE · Select centre, then a point on circle',polygon:'POLYGON · Select 3+ points, then click the first point',angle:'ANGLE · Select three points (vertex second)',midpoint:'MIDPOINT · Select two points',delete:'DELETE · Click an object to remove it'};$('#modeHint').textContent=hints[m]||m.toUpperCase();draw()}
+let canvas,ctx;
+function setupCanvas(){canvas=$('#geoCanvas');ctx=canvas.getContext('2d');const resize=()=>{let r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;canvas.width=Math.max(1,r.width*d);canvas.height=Math.max(1,r.height*d);ctx.setTransform(d,0,0,d,0,0);draw()};new ResizeObserver(resize).observe(canvas);resize();canvas.onpointerdown=pointerDown;canvas.onpointermove=pointerMove;canvas.onpointerup=()=>{dragging=null};canvas.onpointerleave=()=>{dragging=null};canvas.onwheel=e=>{e.preventDefault();zoom=Math.max(.5,Math.min(2.5,zoom+(e.deltaY<0?.1:-.1)));$('#zoomRange').value=zoom;draw()}}
+function world(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left-pan.x)/zoom,y:(e.clientY-r.top-pan.y)/zoom}}
+function near(p){return points.find(x=>Math.hypot(x.x-p.x,x.y-p.y)<12/zoom)}
+let construction=[];
+function pointerDown(e){canvas.setPointerCapture(e.pointerId);let p=world(e),hit=near(p);lastPointer=p;
+ if(mode==='move'){if(hit)dragging=hit;return}
+ if(mode==='delete'){if(hit){saveHistory();points=points.filter(x=>x!==hit);lines=lines.filter(l=>l.a!==hit&&l.b!==hit);circles=circles.filter(c=>c.c!==hit&&c.edge!==hit);polygons=polygons.filter(poly=>!poly.includes(hit));draw();renderObjects()}return}
+ if(mode==='point'){if(!hit){saveHistory();points.push({x:snap?Math.round(p.x/40)*40:p.x,y:snap?Math.round(p.y/40)*40:p.y,label:label()});draw();renderObjects()}return}
+ if(mode==='polygon'&&hit&&construction.length>=2&&hit===construction[0]){saveHistory();polygons.push([...construction]);construction=[];draw();renderObjects();return}
+ if(hit){if(!construction.includes(hit))construction.push(hit);else if(mode==='polygon')construction=[];else construction=[]}
+ else if(mode==='midpoint'){saveHistory();let pt={x:p.x,y:p.y,label:label()};points.push(pt);construction=[];draw();renderObjects();return}
+ if(construction.length===2){saveHistory();let [a,b]=construction;if(mode==='segment'||mode==='line'||mode==='ray')lines.push({a,b,type:mode});if(mode==='circle')circles.push({c:a,edge:b});if(mode==='midpoint'){let m={x:(a.x+b.x)/2,y:(a.y+b.y)/2,label:label()};points.push(m)}construction=[];draw();renderObjects()}
+ if(mode==='angle'&&construction.length===3){saveHistory();let [a,b,c]=construction;let ang=angleAt(a,b,c);let m={x:b.x,y:b.y-26,label:label()};points.push(m);construction=[];notify(`Angle ${a.label}${b.label}${c.label}: ${ang}°`);draw();renderObjects()}
+ if(mode==='polygon'&&construction.length>=3){draw()}
+}
+function pointerMove(e){let p=world(e);$('#coordsHud').textContent=`x: ${(p.x/40).toFixed(2)} · y: ${(-p.y/40).toFixed(2)}`;if(dragging){dragging.x=snap?Math.round(p.x/40)*40:p.x;dragging.y=snap?Math.round(p.y/40)*40:p.y;draw();renderObjects()}}
+function angleAt(a,b,c){let u={x:a.x-b.x,y:a.y-b.y},v={x:c.x-b.x,y:c.y-b.y};let co=(u.x*v.x+u.y*v.y)/(Math.hypot(u.x,u.y)*Math.hypot(v.x,v.y));return (Math.acos(Math.max(-1,Math.min(1,co)))*180/Math.PI).toFixed(1)}
+function draw(){
+ if(!ctx||!canvas)return;let w=canvas.clientWidth,h=canvas.clientHeight;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);let d=window.devicePixelRatio||1;ctx.setTransform(d*zoom,0,0,d*zoom,d*pan.x,d*pan.y);
+ let bg=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();ctx.fillStyle=bg;ctx.fillRect(-pan.x/zoom,-pan.y/zoom,w/zoom,h/zoom);
+ if(grid){ctx.strokeStyle=theme==='dark'?'#26364d':'#e7edf5';ctx.lineWidth=1/zoom;let left=-pan.x/zoom,top=-pan.y/zoom;let sx=Math.floor(left/40)*40,sy=Math.floor(top/40)*40;ctx.beginPath();for(let x=sx;x<left+w/zoom+40;x+=40){ctx.moveTo(x,top);ctx.lineTo(x,top+h/zoom)}for(let y=sy;y<top+h/zoom+40;y+=40){ctx.moveTo(left,y);ctx.lineTo(left+w/zoom,y)}ctx.stroke()}
+ if(axes){ctx.strokeStyle=theme==='dark'?'#91a4bd':'#64748b';ctx.lineWidth=1.5/zoom;ctx.beginPath();ctx.moveTo(-pan.x/zoom,0);ctx.lineTo((w-pan.x)/zoom,0);ctx.moveTo(0,-pan.y/zoom);ctx.lineTo(0,(h-pan.y)/zoom);ctx.stroke()}
+ lines.forEach(l=>{let dx=l.b.x-l.a.x,dy=l.b.y-l.a.y;if(l.type==='line'){let t=2000/Math.max(1,Math.hypot(dx,dy));ctx.beginPath();ctx.moveTo(l.a.x-dx*t,l.a.y-dy*t);ctx.lineTo(l.a.x+dx*t,l.a.y+dy*t)}else if(l.type==='ray'){ctx.beginPath();ctx.moveTo(l.a.x,l.a.y);ctx.lineTo(l.a.x+dx*1000,l.a.y+dy*1000)}else{ctx.beginPath();ctx.moveTo(l.a.x,l.a.y);ctx.lineTo(l.b.x,l.b.y)}ctx.strokeStyle='#2563eb';ctx.lineWidth=2.4/zoom;ctx.stroke();if(l.type==='segment'){ctx.fillStyle='#1d4ed8';ctx.font=`${12/zoom}px sans-serif`;ctx.fillText(`${dist(l.a,l.b).toFixed(2)} u`,(l.a.x+l.b.x)/2+5/zoom,(l.a.y+l.b.y)/2-6/zoom)}});
+ circles.forEach(c=>{ctx.beginPath();ctx.arc(c.c.x,c.c.y,Math.hypot(c.edge.x-c.c.x,c.edge.y-c.c.y),0,Math.PI*2);ctx.strokeStyle='#16a34a';ctx.lineWidth=2/zoom;ctx.stroke()});
+ polygons.forEach(poly=>{ctx.beginPath();poly.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle='rgba(37,99,235,.09)';ctx.fill();ctx.strokeStyle='#2563eb';ctx.lineWidth=2/zoom;ctx.stroke()});
+ points.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,5/zoom,0,Math.PI*2);ctx.fillStyle='#1e293b';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5/zoom;ctx.stroke();if(showLabels){ctx.fillStyle=theme==='dark'?'#e5edf8':'#172033';ctx.font=`bold ${12/zoom}px sans-serif`;ctx.fillText(`${p.label} ${coords(p)}`,p.x+9/zoom,p.y-9/zoom)}});
+ construction.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,9/zoom,0,Math.PI*2);ctx.strokeStyle='#f97316';ctx.lineWidth=2/zoom;ctx.stroke()});
+}
+function renderObjects(){let el=$('#objectList');if(!el)return;let html='';points.forEach(p=>html+=`<div class="object"><span><strong><span style="color:#2563eb">●</span> ${p.label}</strong> Point</span><span>${coords(p)}</span></div>`);lines.forEach(l=>html+=`<div class="object"><span><strong>／ ${l.a.label}${l.b.label}</strong> ${l.type}</span><span>${dist(l.a,l.b).toFixed(2)} u</span></div>`);circles.forEach(c=>{let r=dist(c.c,c.edge);html+=`<div class="object"><span><strong>○ ${c.c.label}</strong> Circle</span><span>r ${r.toFixed(2)}</span></div>`});polygons.forEach((p,i)=>html+=`<div class="object"><span><strong><svg class="icon" viewBox="0 0 24 24"><path d="m12 3 8 6-3 10H7L4 9l8-6Z"/></svg> Polygon ${i+1}</strong></span><span>${p.length} vertices</span></div>`);el.innerHTML=html||'<div class="empty">No objects yet.<br>Choose Point and click the canvas.</div>';$('#objectCount').textContent=`${points.length+lines.length+circles.length+polygons.length} objects`;$('#selectedInfo').textContent=points.length?`${points.length} points · ${lines.length} lines · ${circles.length} circles · ${polygons.length} polygons`:'Nothing selected yet.'}
+function clearAll(){if(!points.length&&!lines.length&&!circles.length&&!polygons.length)return;saveHistory();points=[];lines=[];circles=[];polygons=[];construction=[];labelCounter=0;draw();renderObjects();notify('Construction cleared')}
+function exportPng(){let a=document.createElement('a');a.download='mini-geogebra-construction.png';a.href=canvas.toDataURL('image/png');a.click();notify('PNG exported')}
+function renderGraph(){let c=$('#pageContent');c.innerHTML=`<div class="panel-card"><div class="row"><div><b>Functions</b><div class="small muted">Use x as the variable. Examples: x^2, sin(x), 2*x+1</div></div><button class="primary" id="addFn">＋ Add function</button></div><div id="fnList"></div><div class="small muted">Supported: + − * / ^, sin, cos, tan, sqrt, abs, log, ln, exp.</div></div><div class="panel-card" style="margin-top:12px;height:460px"><canvas id="graphCanvas" style="width:100%;height:100%"></canvas></div>`;renderFnList()}
+function safeEval(expr,x){let s=expr.replace(/\^/g,'**').replace(/\bpi\b/gi,'Math.PI').replace(/\be\b/g,'Math.E');if(!/^[0-9xX+\-*/().,\sA-Za-z_*]+$/.test(s))throw Error('Invalid expression');s=s.replace(/\b(sin|cos|tan|sqrt|abs|log|ln|exp)\b/g,'Math.$1').replace(/Math\.ln/g,'Math.log');return Function('x',`"use strict";return (${s})`)(x)}
+function renderFnList(){let el=$('#fnList');el.innerHTML=graphFns.map((f,i)=>`<div class="row" style="margin:8px 0"><input class="graph-input" data-i="${i}" value="${f}"><button data-remove="${i}" class="danger">×</button></div>`).join('');el.querySelectorAll('input').forEach(inp=>inp.oninput=e=>{graphFns[+e.target.dataset.i]=e.target.value;drawGraph()});el.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{graphFns.splice(+b.dataset.remove,1);renderFnList();drawGraph()});$('#addFn').onclick=()=>{graphFns.push('y=x');renderFnList();drawGraph()};drawGraph()}
+function drawGraph(){let cv=$('#graphCanvas');if(!cv)return;let r=cv.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;let x=cv.getContext('2d');x.scale(d,d);let w=r.width,h=r.height,unit=40;x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--panel').trim();x.fillRect(0,0,w,h);x.strokeStyle=theme==='dark'?'#293951':'#e2e8f0';x.lineWidth=1;for(let xx=w/2%unit;xx<w;xx+=unit){x.beginPath();x.moveTo(xx,0);x.lineTo(xx,h);x.stroke()}for(let yy=h/2%unit;yy<h;yy+=unit){x.beginPath();x.moveTo(0,yy);x.lineTo(w,yy);x.stroke()}x.strokeStyle=theme==='dark'?'#9aabc2':'#64748b';x.lineWidth=1.5;x.beginPath();x.moveTo(0,h/2);x.lineTo(w,h/2);x.moveTo(w/2,0);x.lineTo(w/2,h);x.stroke();graphFns.forEach((f,i)=>{let expr=f.replace(/^y\s*=/i,'');x.beginPath();let started=false;for(let px=0;px<w;px++){let xx=(px-w/2)/unit;try{let yy=safeEval(expr,xx),py=h/2-yy*unit;if(Number.isFinite(py)&&Math.abs(py)<h*4){if(!started){x.moveTo(px,py);started=true}else x.lineTo(px,py)}else started=false}catch{started=false}}x.strokeStyle=colors[i%colors.length];x.lineWidth=2.3;x.stroke()})}
+function renderCalculator(){let c=$('#pageContent');c.innerHTML=`<div class="panel-card" style="max-width:520px"><div class="small muted">Expression</div><div class="calc-display" id="calcDisplay">${calcExpr}</div><div class="keypad">${['7','8','9','÷','4','5','6','×','1','2','3','−','0','.','(',')','sin(','cos(','tan(','√(','π','^','⌫','C','+','Ans','log(','='].map(k=>`<button data-key="${k}" class="${k==='='?'primary':''}">${k}</button>`).join('')}</div><div class="small muted" style="margin-top:10px">Use keyboard or buttons. Supports sin, cos, tan, sqrt, log, ln, pi and powers.</div></div>`;$$('[data-key]').forEach(b=>b.onclick=()=>calcKey(b.dataset.key))}
+function calcKey(k){if(k==='C')calcExpr='0';else if(k==='⌫')calcExpr=calcExpr.length>1?calcExpr.slice(0,-1):'0';else if(k==='='){try{let e=calcExpr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/√\(/g,'sqrt(').replace(/π/g,'pi').replace(/\bAns\b/g,calcAns);let v=safeEval(e,0);if(!Number.isFinite(v))throw 0;calcAns=String(v);calcExpr=Number(v.toPrecision(10)).toString()}catch{notify('Check the expression');return}}else calcExpr=calcExpr==='0'?k:calcExpr+(k==='Ans'?'Ans':k);$('#calcDisplay').textContent=calcExpr}
+function renderShapes(){let c=$('#pageContent');c.innerHTML=`<div class="grid2"><div class="panel-card"><b>Circle calculator</b><div class="field"><label>Radius</label><input id="radius" type="number" min="0" value="5"></div><div id="circleResult" class="formula"></div></div><div class="panel-card"><b>Rectangle calculator</b><div class="field"><label>Length</label><input id="rectL" type="number" value="8"></div><div class="field"><label>Width</label><input id="rectW" type="number" value="4"></div><div id="rectResult" class="formula"></div></div><div class="panel-card"><b>Triangle calculator</b><div class="field"><label>Base</label><input id="triB" type="number" value="10"></div><div class="field"><label>Height</label><input id="triH" type="number" value="6"></div><div id="triResult" class="formula"></div></div><div class="panel-card"><b>Pythagoras calculator</b><div class="field"><label>Side a</label><input id="pyA" type="number" value="3"></div><div class="field"><label>Side b</label><input id="pyB" type="number" value="4"></div><div id="pyResult" class="formula"></div></div></div>`;['radius','rectL','rectW','triB','triH','pyA','pyB'].forEach(id=>$('#'+id).oninput=updateShapeResults);updateShapeResults()}
+function updateShapeResults(){let r=+$('#radius').value,l=+$('#rectL').value,w=+$('#rectW').value,b=+$('#triB').value,h=+$('#triH').value,a=+$('#pyA').value,bb=+$('#pyB').value;$('#circleResult').textContent=`Area: ${(Math.PI*r*r).toFixed(3)}\nCircumference: ${(2*Math.PI*r).toFixed(3)}\nDiameter: ${(2*r).toFixed(3)}`;$('#rectResult').textContent=`Area: ${(l*w).toFixed(3)}\nPerimeter: ${(2*(l+w)).toFixed(3)}`;$('#triResult').textContent=`Area: ${(b*h/2).toFixed(3)}\nBase: ${b} · Height: ${h}`;$('#pyResult').textContent=`Hypotenuse: ${Math.hypot(a,bb).toFixed(3)}`}
+function renderFormulas(){let data=[['Triangle area','A = ½ × base × height'],['Rectangle area','A = length × width'],['Rectangle perimeter','P = 2(length + width)'],['Circle area','A = πr²'],['Circle circumference','C = 2πr'],['Pythagorean theorem','a² + b² = c²'],['Distance formula','d = √((x₂ − x₁)² + (y₂ − y₁)²)'],['Midpoint formula','M = ((x₁+x₂)/2, (y₁+y₂)/2)'],['Slope','m = (y₂ − y₁)/(x₂ − x₁)'],['Quadratic formula','x = (−b ± √(b² − 4ac))/(2a)'],['Mean','mean = sum of values / number of values'],['Simple interest','I = P × R × T / 100']];$('#pageContent').innerHTML=`<div class="panel-card"><input id="formulaSearch" placeholder="Search formulas..." style="width:100%;margin-bottom:10px"><div id="formulaList"></div></div>`;function fill(q=''){$('#formulaList').innerHTML=data.filter(d=>d.join(' ').toLowerCase().includes(q.toLowerCase())).map(d=>`<div class="project-row"><div><b>${d[0]}</b><div class="formula">${d[1]}</div></div><button data-copy="${d[1]}">Copy</button></div>`).join('')||'<div class="empty">No matching formulas.</div>';$$('[data-copy]').forEach(b=>b.onclick=()=>{navigator.clipboard?.writeText(b.dataset.copy);notify('Formula copied')})}$('#formulaSearch').oninput=e=>fill(e.target.value);fill()}
+function projectData(){return {name:projectName,points,lines:lines.map(l=>({a:points.indexOf(l.a),b:points.indexOf(l.b),type:l.type})),circles:circles.map(c=>({c:points.indexOf(c.c),edge:points.indexOf(c.edge)})),polygons:polygons.map(p=>p.map(x=>points.indexOf(x))),labelCounter}}
+function saveProject(){let data=projectData();let all=JSON.parse(localStorage.getItem('mgg-projects')||'[]');let i=all.findIndex(x=>x.name===projectName);if(i>=0)all[i]=data;else all.push(data);localStorage.setItem('mgg-projects',JSON.stringify(all));$('#saveStatus').textContent='Saved · '+new Date().toLocaleTimeString();notify('Project saved in this browser')}
+function loadProject(d){projectName=d.name;points=d.points||[];lines=(d.lines||[]).map(l=>({a:points[l.a],b:points[l.b],type:l.type||'segment'}));circles=(d.circles||[]).map(c=>({c:points[c.c],edge:points[c.edge]}));polygons=(d.polygons||[]).map(p=>p.map(i=>points[i]));labelCounter=d.labelCounter||points.length;setPage('geometry');notify('Project opened')}
+function renderProjects(){let all=JSON.parse(localStorage.getItem('mgg-projects')||'[]');$('#pageContent').innerHTML=`<div class="panel-card"><div class="row"><div><b>Local project library</b><div class="small muted">Projects stay on this device and browser. No account required.</div></div><button class="primary" id="saveProject">Save current</button></div><div class="field"><label>Project name</label><input id="projectName" value="${projectName.replace(/"/g,'&quot;')}"></div><div id="projectList"></div><div class="row" style="margin-top:12px"><button id="exportProject">Export project (.json)</button><button id="importProject">Import project (.json)</button><input type="file" id="fileInput" accept=".json,application/json" hidden></div></div>`;$('#projectName').oninput=e=>projectName=e.target.value||'Untitled construction';$('#saveProject').onclick=()=>{saveProject();renderProjects()};$('#projectList').innerHTML=all.map((d,i)=>`<div class="project-row"><div><b>${d.name}</b><div class="small muted">${d.points.length} points · ${d.lines.length} lines</div></div><div class="row"><button data-open="${i}">Open</button><button class="danger" data-del="${i}">Delete</button></div></div>`).join('')||'<div class="empty">No saved projects yet. Save a construction to see it here.</div>';$$('[data-open]').forEach(b=>b.onclick=()=>loadProject(all[+b.dataset.open]));$$('[data-del]').forEach(b=>b.onclick=()=>{all.splice(+b.dataset.del,1);localStorage.setItem('mgg-projects',JSON.stringify(all));renderProjects()});$('#exportProject').onclick=()=>download('mini-geogebra-project.json',JSON.stringify(projectData(),null,2),'application/json');$('#importProject').onclick=()=>$('#fileInput').click();$('#fileInput').onchange=e=>{let f=e.target.files[0];if(!f)return;let reader=new FileReader();reader.onload=()=>{try{loadProject(JSON.parse(reader.result))}catch{notify('Invalid project file')}};reader.readAsText(f)}}
+function download(name,data,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+function renderHelp(){$('#pageContent').innerHTML=`<div class="panel-card"><h2>Getting started</h2><ol><li>Open Geometry Studio and choose Point.</li><li>Click the canvas to create points.</li><li>Choose Segment and click two existing points.</li><li>Choose Move to drag points; connected objects update with them.</li><li>Use the right-side panel to inspect your construction.</li><li>Save your work from My Projects.</li></ol><h2>Keyboard shortcuts</h2><div class="project-row"><span>Undo</span><b>Ctrl / ⌘ + Z</b></div><div class="project-row"><span>Redo</span><b>Ctrl / ⌘ + Y</b></div><div class="project-row"><span>Save project</span><b>Ctrl / ⌘ + S</b></div><div class="project-row"><span>Delete construction</span><b>Use Clear all</b></div><h2>Notes</h2><p class="muted">This is a self-contained browser app. Projects are stored locally in this browser using localStorage. Export a JSON backup if you want to move work to another device.</p></div>`}
+function renderAbout(){
+  $('#pageContent').innerHTML=`<div class="about-card">
+    <div class="about-logo-wrap">
+      <svg class="geospace-logo" viewBox="0 0 40 40" role="img" aria-label="GeoSpace logo">
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="currentColor"/>
+        <path d="M9 30V10M9 30H31" fill="none" stroke="#BFDBFE" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M9 30 27.5 11.5 31 30Z" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="9" cy="30" r="2.2" fill="#FFFFFF"/>
+        <circle cx="27.5" cy="11.5" r="2.2" fill="#BFDBFE"/>
+        <circle cx="31" cy="30" r="2.2" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="about-kicker">MADE BY A STUDENT, FOR STUDENTS</div>
+    <h2>Math is better when you can explore it.</h2>
+    <p>GeoSpace is a student-created project designed to make geometry and mathematics more visual, interactive and approachable.</p>
+    <div class="about-credit">
+      <div><span class="credit-label">CREATED BY</span><strong>Utkarsh Raj</strong></div>
+      <div><span class="credit-label">SCHOOL</span><strong>SBPS</strong></div>
+    </div>
+    <div class="about-footer">Built with curiosity. Made for learning.</div>
+  </div>`;
+}
+$('#themeBtn').addEventListener('click',e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  const nextTheme = theme === 'dark' ? 'light' : 'dark';
+  setTheme(nextTheme);
+  if(page==='geometry') draw();
+  if(page==='graph') drawGraph();
+});
+$('#fullscreenBtn').onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()};
+$('#undoBtn').onclick=undo;$('#redoBtn').onclick=redo;
+document.addEventListener('keydown',e=>{let mod=e.ctrlKey||e.metaKey;if(mod&&e.key.toLowerCase()==='z'){e.preventDefault();undo()}if(mod&&e.key.toLowerCase()==='y'){e.preventDefault();redo()}if(mod&&e.key.toLowerCase()==='s'){e.preventDefault();saveProject()}});
+setPage('geometry');updateUndo();
+})();
+</script>
+</body>
+</html>
